@@ -12,6 +12,9 @@ builds:
     goarch:
       - amd64
       - arm64
+    hooks:
+      post:
+        - sh -c "cosign sign-blob -key $COSIGN_KEY_LOCATION {{ .Path }} > dist/{{ .ProjectName }}_{{ .Version }}_{{ .Target }}.sig"
 brews:
   - tap:
       owner: dirien
@@ -31,3 +34,6 @@ archives:
   - format_overrides:
       - goos: windows
         format: zip
+release:
+  extra_files:
+    - glob: dist/*.sig
