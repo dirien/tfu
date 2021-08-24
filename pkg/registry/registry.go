@@ -2,11 +2,12 @@ package registry
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/go-resty/resty/v2"
 )
 
-type Provider struct {
+type RegistryDetails struct {
 	ID        string      `json:"id"`
 	Owner     string      `json:"owner"`
 	Namespace string      `json:"namespace"`
@@ -16,15 +17,22 @@ type Provider struct {
 	Versions  []string    `json:"versions"`
 }
 
-func GetRegistryProvider(provider string) (*Provider, error) {
+type RegistryType string
+
+const (
+	Providers RegistryType = "providers"
+	Modules   RegistryType = "modules"
+)
+
+func GetRegistryDetails(provider string, registryType RegistryType) (*RegistryDetails, error) {
 	client := resty.New()
 
 	resp, err := client.R().
-		Get("https://registry.terraform.io/v1/providers/" + provider)
+		Get(fmt.Sprintf("https://registry.terraform.io/v1/%s/%s", registryType, provider))
 	if err != nil {
 		return nil, err
 	}
-	registryProvider := Provider{}
+	registryProvider := RegistryDetails{}
 	if err := json.Unmarshal(resp.Body(), &registryProvider); err != nil {
 		return nil, err
 	}

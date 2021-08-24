@@ -30,6 +30,22 @@ the [release page](https://github.com/dirien/tfu/releases).
 
 So simple that downloading the cli will take you longer!
 
+#### GitHub Token
+
+`tfu` supports private modules hosted on github. To not run into a rate limit:
+
+```
+403 API rate limit exceeded for xxxxx. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.) [rate reset in 16m17s]
+```
+
+Please set the env variable:
+
+```
+export GIT_TOKEN=xxx
+```
+
+For more details on module sources -> https://www.terraform.io/docs/language/modules/sources.html#github
+
 For directory:
 
 ```bash
@@ -50,13 +66,15 @@ tfu update -d /Users/dirien/Tools/repos/stackit-minecraft/
 🔎 Start scanning for TF providers...  ⢿ 
 🎉 Scanning finished...   
 
-                                          FILE                                          |                PROVIDER                | VERSION | REGISTRY VERSION | UPDATE  
-----------------------------------------------------------------------------------------+----------------------------------------+---------+------------------+---------
-  /Users/dirien/Tools/repos/stackit-minecraft/minecraft/main.tf                         | hashicorp/azurerm                      | 2.69.0  | 2.69.0           | false   
-  /Users/dirien/Tools/repos/stackit-minecraft/minecraft/modules/minecraft-infra/main.tf | hashicorp/local                        | 2.1.0   | 2.1.0            | false   
-  /Users/dirien/Tools/repos/stackit-minecraft/minecraft/modules/minecraft-infra/main.tf | terraform-provider-openstack/openstack | 1.43.0  | 1.43.0           | false   
-  /Users/dirien/Tools/repos/stackit-minecraft/porter/terraform/main.tf                  | civo/civo                              | 0.10.6  | 0.10.6           | false   
-  /Users/dirien/Tools/repos/stackit-minecraft/porter/terraform/main.tf                  | hashicorp/local                        | 2.1.0   | 2.1.0            | false   
+   FILE   |                                          PROVIDER (P) / MODULE (M)                                          | USED VERSION | LATEST VERSION | UPDATABLE  
+----------+-------------------------------------------------------------------------------------------------------------+--------------+----------------+------------
+  main.tf | git@github.com:rackspace-infrastructure-automation/aws-terraform-asg_instance_replacement//?ref=v0.12.0 (M) | 0.12.0       | 0.12.1         | true       
+  main.tf | git@github.com:rackspace-infrastructure-automation/aws-terraform-vpc_basenetwork//?ref=v0.12.1 (M)          | 0.12.1       | 0.12.7         | true       
+  main.tf | git@github.com:rackspace-infrastructure-automation/aws-terraform-security_group//?ref=v0.12.0 (M)           | 0.12.0       | 0.12.3         | true       
+  main.tf | git@github.com:rackspace-infrastructure-automation/aws-terraform-ec2_asg//?ref=v0.12.1 (M)                  | 0.12.1       | 0.12.15        | true       
+  main.tf | git@github.com:rackspace-infrastructure-automation/aws-terraform-ec2_asg//?ref=v0.12.1 (M)                  | 0.12.1       | 0.12.15        | true       
+  main.tf | hashicorp/consul/aws (M)                                                                                    | 0.1.0        | 0.11.0         | true       
+  main.tf | hashicorp/oci (P)                                                                                           | 4.31.0       | 4.40.0         | true  
 ```
 
 ### Contributing 🤝
