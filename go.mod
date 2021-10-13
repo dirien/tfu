@@ -6,7 +6,7 @@ require (
 	github.com/briandowns/spinner v1.16.0
 	github.com/fatih/color v1.13.0
 	github.com/go-resty/resty/v2 v2.6.0
-	github.com/google/go-github/v39 v39.1.0
+	github.com/google/go-github/v39 v39.2.0
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/hashicorp/go-version v1.3.0
 	github.com/hashicorp/hcl/v2 v2.10.1
