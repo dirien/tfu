@@ -5,6 +5,8 @@ import (
 	"os"
 	"strings"
 
+	giturls "github.com/whilp/git-urls"
+
 	"github.com/google/go-github/v39/github"
 	"github.com/hashicorp/go-version"
 	"golang.org/x/oauth2"
@@ -13,34 +15,34 @@ import (
 type Github struct {
 	Owner   string
 	Repo    string
-	Version *version.Version
+	Version string
 }
 
 func ParseGithubInfos(source string) *Github {
 	//git@github.com:rackspace-infrastructure-automation/aws-terraform-asg_instance_replacement//?ref=v0.12.0
 	//https://github.com/rackspace-infrastructure-automation/aws-terraform-asg_instance_replacement.git
-	source = strings.TrimPrefix(source, "git@github.com:")
-	source = strings.TrimPrefix(source, "https://github.com/")
-	sources := strings.SplitAfter(source, "//")
-	var ref string
-	var currentVersion *version.Version
-	if len(sources) > 1 {
-		var err error
-		ref = strings.TrimPrefix(sources[1], "?ref=")
-		currentVersion, err = version.NewVersion(ref)
-		if err != nil {
-			return nil
-		}
+	parse, err := giturls.Parse(source)
+	if err != nil {
+		return nil
+	}
+	var currentVersion string
+	if len(parse.Query()["ref"]) > 0 {
+		currentVersion = parse.Query()["ref"][0]
+
 	} else {
 		// no ref means it is already master
 		return nil
 	}
-	//treim the hell out of it.
-	source = strings.TrimSuffix(sources[0], "//")
-	source = strings.TrimSuffix(source, ".git")
+	diff := 0
+	if parse.Scheme == "ssh" {
+		diff = 1
+	}
+	owner := strings.Split(parse.Path, "/")[1-diff]
+	repo := strings.Split(parse.Path, "/")[2-diff]
+	repo = strings.Replace(repo, ".git", "", -1)
 	return &Github{
-		Owner:   strings.Split(source, "/")[0],
-		Repo:    strings.Split(source, "/")[1],
+		Owner:   owner,
+		Repo:    repo,
 		Version: currentVersion,
 	}
 }

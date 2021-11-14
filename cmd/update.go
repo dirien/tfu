@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -19,6 +20,8 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
+
+const SupportedConstraintRegex = "^(?:=[ .\\d\\w-]*|[ .\\d\\w-]*)$"
 
 func init() {
 	tfuCmd.AddCommand(updateCmd)
@@ -84,12 +87,16 @@ func runList(cmd *cobra.Command, _ []string) error {
 	table.SetHeader([]string{"FILE", "PROVIDER (P) / MODULE (M)", "USED VERSION", "LATEST VERSION", "UPDATABLE"})
 	table.SetAutoWrapText(false)
 	for _, provisioner := range tfProvisioner {
-		update := provisioner.OldVersion.LessThan(provisioner.NewVersion)
+		update := false
+		if !provisioner.skip {
+			oldVersion, _ := version.NewVersion(provisioner.OldVersion)
+			update = oldVersion.LessThan(provisioner.NewVersion)
+		}
 		var color []tablewriter.Colors
 		if update {
 			color = []tablewriter.Colors{{tablewriter.Normal}, {tablewriter.Normal}, {tablewriter.FgHiWhiteColor, tablewriter.BgRedColor}, {tablewriter.Normal, tablewriter.BgGreenColor}}
 		}
-		table.Rich([]string{provisioner.Filename, provisioner.Provider, provisioner.OldVersion.String(), provisioner.NewVersion.String(), strconv.FormatBool(update)}, color)
+		table.Rich([]string{provisioner.Filename, provisioner.Provider, provisioner.OldVersion, provisioner.NewVersion.String(), strconv.FormatBool(update)}, color)
 	}
 	table.SetBorder(false)
 	table.Render()
@@ -112,8 +119,9 @@ func inspectFileForOutdatedProvisioner(file string, dryRun bool) ([]TFProvisione
 type TFProvisioner struct {
 	Filename   string
 	Provider   string
-	OldVersion *version.Version
+	OldVersion string
 	NewVersion *version.Version
+	skip       bool
 }
 
 func checkProviderVersions(filename string, tfFile *hcl.TFFile, dryRun bool) ([]TFProvisioner, error) {
@@ -144,19 +152,16 @@ func checkProviderVersions(filename string, tfFile *hcl.TFFile, dryRun bool) ([]
 			}
 		}
 	}
-
+	registryDetails := registry.NewRegistryDetails()
 	// check for Terraform registry modules
 	for _, provider := range tfFile.Module {
 		if len(provider.Version) != 0 {
-			registryProvider, err := registry.GetRegistryDetails(provider.Source, registry.Modules)
+			registryProvider, err := registryDetails.GetRegistryDetails(provider.Source, registry.Modules)
 			if err != nil {
 				return tfProvisioner, err
 			}
-
-			oldV, err := version.NewVersion(provider.Version)
-			if err != nil {
-				return nil, err
-			}
+			providerVersion := provider.Version
+			match, providerVersion := checkSupportedConstraint(providerVersion)
 			newV, err := version.NewVersion(registryProvider.Version)
 			if err != nil {
 				return nil, err
@@ -165,8 +170,9 @@ func checkProviderVersions(filename string, tfFile *hcl.TFFile, dryRun bool) ([]
 			tfProvisioner = append(tfProvisioner, TFProvisioner{
 				Filename:   filename,
 				Provider:   fmt.Sprintf("%s (M)", provider.Source),
-				OldVersion: oldV,
+				OldVersion: providerVersion,
 				NewVersion: newV,
+				skip:       !match,
 			})
 
 			err = updateHCLFile(filename, fmt.Sprintf("version = \"%s\"", provider.Version), fmt.Sprintf("version = \"%s\"", registryProvider.Version), dryRun)
@@ -178,15 +184,13 @@ func checkProviderVersions(filename string, tfFile *hcl.TFFile, dryRun bool) ([]
 	// check required_provider in terraform block
 	for _, provider := range tfFile.Terraform.RequiredProviders.Providers {
 
-		registryProvider, err := registry.GetRegistryDetails(provider["source"], registry.Providers)
+		registryProvider, err := registryDetails.GetRegistryDetails(provider["source"], registry.Providers)
 		if err != nil {
 			return tfProvisioner, err
 		}
 
-		oldV, err := version.NewVersion(provider["version"])
-		if err != nil {
-			return nil, err
-		}
+		providerVersion := provider["version"]
+		match, providerVersion := checkSupportedConstraint(providerVersion)
 		newV, err := version.NewVersion(registryProvider.Version)
 		if err != nil {
 			return nil, err
@@ -194,8 +198,9 @@ func checkProviderVersions(filename string, tfFile *hcl.TFFile, dryRun bool) ([]
 		tfProvisioner = append(tfProvisioner, TFProvisioner{
 			Filename:   filename,
 			Provider:   fmt.Sprintf("%s (P)", provider["source"]),
-			OldVersion: oldV,
+			OldVersion: providerVersion,
 			NewVersion: newV,
+			skip:       !match,
 		})
 
 		err = updateHCLFile(filename, fmt.Sprintf("version = \"%s\"", provider["version"]), fmt.Sprintf("version = \"%s\"", registryProvider.Version), dryRun)
@@ -204,6 +209,16 @@ func checkProviderVersions(filename string, tfFile *hcl.TFFile, dryRun bool) ([]
 		}
 	}
 	return tfProvisioner, nil
+}
+
+func checkSupportedConstraint(providerVersion string) (bool, string) {
+	supportedConstraint := regexp.MustCompile(SupportedConstraintRegex)
+	match := supportedConstraint.Match([]byte(providerVersion))
+	if match {
+		providerVersion = strings.Replace(providerVersion, "=", "", -1)
+		providerVersion = strings.TrimSpace(providerVersion)
+	}
+	return match, providerVersion
 }
 
 func updateHCLFile(filename, oldVersion, newVersion string, dryRun bool) error {
