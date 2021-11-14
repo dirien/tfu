@@ -24,10 +24,20 @@ const (
 	Modules   RegistryType = "modules"
 )
 
-func GetRegistryDetails(provider string, registryType RegistryType) (*RegistryDetails, error) {
-	client := resty.New()
+type RegistryDetailsProvider struct {
+	client *resty.Client
+}
 
-	resp, err := client.R().
+func NewRegistryDetails() *RegistryDetailsProvider {
+	client := resty.New()
+	return &RegistryDetailsProvider{
+		client: client,
+	}
+}
+
+func (r *RegistryDetailsProvider) GetRegistryDetails(provider string, registryType RegistryType) (*RegistryDetails, error) {
+
+	resp, err := r.client.R().
 		Get(fmt.Sprintf("https://registry.terraform.io/v1/%s/%s", registryType, provider))
 	if err != nil {
 		return nil, err
