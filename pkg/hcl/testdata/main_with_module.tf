@@ -19,7 +19,7 @@ module "vpc" {
 }
 
 module "instance_replacement_advanced" {
-  source = "git@github.com:rackspace-infrastructure-automation/aws-terraform-asg_instance_replacement//?ref=v0.12.0"
+  source = "git@github.com:rackspace-infrastructure-automation/aws-terraform-asg_instance_replacement//?ref=v0.12.1"
 
   cloudwatch_log_retention = 14                # Set custom retention for Lambda logs
   name                     = "MY-ASGIR"        # Set custom name
