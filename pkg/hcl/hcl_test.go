@@ -20,7 +20,7 @@ func TestProviderEquals(t *testing.T) {
 		},
 	}
 
-	parser, err := NewHCLFileParser("testdata/main.tf")
+	parser, err := NewHCLFileParser("testdata/main.data")
 	if err != nil {
 		return
 	}
