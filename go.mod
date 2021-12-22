@@ -18,7 +18,7 @@ require (
 )
 
 require (
-	github.com/jarcoal/httpmock v1.0.8
+	github.com/jarcoal/httpmock v1.1.0
 	github.com/stretchr/testify v1.7.0
 	github.com/whilp/git-urls v1.0.0
 )
