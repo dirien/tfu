@@ -8,6 +8,11 @@ on:
       - '*'
   pull_request:
 
+permissions:
+  contents: write
+  id-token: write
+  packages: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -47,19 +52,12 @@ jobs:
       - uses: codecov/codecov-action@v2
         with:
           file: ./coverage.txt
-      - uses: sigstore/cosign-installer@main
-        with:
-          cosign-release: 'v1.2.0'
-      - name: install cosign private key
-        run: 'echo "$COSIGN_KEY" > $COSIGN_KEY_LOCATION'
-        shell: bash
-        env:
-          COSIGN_KEY: ${{secrets.COSIGN_KEY}}
+      - uses: sigstore/cosign-installer@v1.4.1
+      - uses: anchore/sbom-action/download-syft@v0.6.0
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
         with:
           version: latest
           args: release --rm-dist
         env:
-          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
