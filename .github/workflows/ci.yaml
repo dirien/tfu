@@ -50,7 +50,7 @@ jobs:
       - uses: codecov/codecov-action@v3
         with:
           file: ./coverage.txt
-      - uses: sigstore/cosign-installer@v2.1.0
+      - uses: sigstore/cosign-installer@v2.2.0
       - uses: anchore/sbom-action/download-syft@v0.9.0
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
