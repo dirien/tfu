@@ -51,7 +51,7 @@ jobs:
         with:
           file: ./coverage.txt
       - uses: sigstore/cosign-installer@v2.8.1
-      - uses: anchore/sbom-action/download-syft@v0.13.2
+      - uses: anchore/sbom-action/download-syft@v0.13.3
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v4
         with:
