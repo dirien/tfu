@@ -11,10 +11,10 @@ import (
 	"time"
 
 	"github.com/briandowns/spinner"
-	"github.com/dirien/tfu/pkg/git"
+	"github.com/dirien/tfu/internal/git"
 
-	"github.com/dirien/tfu/pkg/hcl"
-	"github.com/dirien/tfu/pkg/registry"
+	"github.com/dirien/tfu/internal/hcl"
+	"github.com/dirien/tfu/internal/registry"
 	"github.com/hashicorp/go-version"
 	"github.com/olekukonko/tablewriter"
 	"github.com/pkg/errors"
