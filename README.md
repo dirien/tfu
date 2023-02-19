@@ -1,5 +1,6 @@
 [![codecov](https://codecov.io/gh/dirien/tfu/branch/main/graph/badge.svg?token=ZPXEUC4NFQ)](https://codecov.io/gh/dirien/tfu)
-![VEXXHOST](https://img.shields.io/badge/Terraform-7B42BC?style=for-the-badge&logo=terraform&logoColor=white)
+![Terraform](https://img.shields.io/badge/Terraform-7B42BC?style=for-the-badge&logo=terraform&logoColor=white)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/dirien/tfu/badge?style=for-the-badge)](https://api.securityscorecards.dev/projects/github.com/dirien/tfu)
 
 
 # tfu (speak 'TF-up')
