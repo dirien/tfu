@@ -3,24 +3,23 @@ package registry
 import (
 	"fmt"
 	"os"
+	"testing"
 
 	"github.com/dirien/tfu/internal/hcl"
 	"github.com/go-resty/resty/v2"
 	"github.com/jarcoal/httpmock"
 	"github.com/stretchr/testify/require"
-
-	"testing"
 )
 
 func TestProviderEquals(t *testing.T) {
-	d := RegistryDetailsProvider{
+	d := DetailsProvider{
 		client: resty.New(),
 	}
 
 	provider := hcl.Terraform{
 		RequiredProviders: hcl.RequiredProviders{
 			Providers: map[string]map[string]string{
-				"google": map[string]string{
+				"google": {
 					"source":  "hashicorp/google",
 					"version": "3.75.0",
 				},
@@ -28,7 +27,7 @@ func TestProviderEquals(t *testing.T) {
 		},
 	}
 
-	result := &RegistryDetails{
+	result := &Details{
 		ID:        "hashicorp/google/4.0.0",
 		Owner:     "hashicorp",
 		Namespace: "hashicorp",

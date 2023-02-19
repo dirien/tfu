@@ -7,7 +7,7 @@ import (
 	"github.com/go-resty/resty/v2"
 )
 
-type RegistryDetails struct {
+type Details struct {
 	ID        string      `json:"id"`
 	Owner     string      `json:"owner"`
 	Namespace string      `json:"namespace"`
@@ -17,32 +17,31 @@ type RegistryDetails struct {
 	Versions  []string    `json:"versions"`
 }
 
-type RegistryType string
+type Type string
 
 const (
-	Providers RegistryType = "providers"
-	Modules   RegistryType = "modules"
+	Providers Type = "providers"
+	Modules   Type = "modules"
 )
 
-type RegistryDetailsProvider struct {
+type DetailsProvider struct {
 	client *resty.Client
 }
 
-func NewRegistryDetails() *RegistryDetailsProvider {
+func NewRegistryDetails() *DetailsProvider {
 	client := resty.New()
-	return &RegistryDetailsProvider{
+	return &DetailsProvider{
 		client: client,
 	}
 }
 
-func (r *RegistryDetailsProvider) GetRegistryDetails(provider string, registryType RegistryType) (*RegistryDetails, error) {
-
+func (r *DetailsProvider) GetRegistryDetails(provider string, registryType Type) (*Details, error) {
 	resp, err := r.client.R().
 		Get(fmt.Sprintf("https://registry.terraform.io/v1/%s/%s", registryType, provider))
 	if err != nil {
 		return nil, err
 	}
-	registryProvider := RegistryDetails{}
+	registryProvider := Details{}
 	if err := json.Unmarshal(resp.Body(), &registryProvider); err != nil {
 		return nil, err
 	}

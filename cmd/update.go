@@ -2,7 +2,6 @@ package tfu
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -41,15 +40,15 @@ var updateCmd = &cobra.Command{
 func runList(cmd *cobra.Command, _ []string) error {
 	file, err := cmd.Flags().GetString("file")
 	if err != nil {
-		return errors.Wrap(err, "failed to get 'file' value.")
+		return errors.Wrap(err, "failed to get 'file' value")
 	}
 	directory, err := cmd.Flags().GetString("directory")
 	if err != nil {
-		return errors.Wrap(err, "failed to get 'directory' value.")
+		return errors.Wrap(err, "failed to get 'directory' value")
 	}
 	dryRun, err := cmd.Flags().GetBool("dry-run")
 	if err != nil {
-		return errors.Wrap(err, "failed to get 'dry-run' value.")
+		return errors.Wrap(err, "failed to get 'dry-run' value")
 	}
 	fmt.Println("")
 	if !git.CheckGitTokenIsSet() {
@@ -215,21 +214,21 @@ func checkSupportedConstraint(providerVersion string) (bool, string) {
 	supportedConstraint := regexp.MustCompile(SupportedConstraintRegex)
 	match := supportedConstraint.Match([]byte(providerVersion))
 	if match {
-		providerVersion = strings.Replace(providerVersion, "=", "", -1)
+		providerVersion = strings.ReplaceAll(providerVersion, "=", "")
 		providerVersion = strings.TrimSpace(providerVersion)
 	}
 	return match, providerVersion
 }
 
 func updateHCLFile(filename, oldVersion, newVersion string, dryRun bool) error {
-	b, err := ioutil.ReadFile(filename)
+	b, err := os.ReadFile(filename)
 	if err != nil {
 		return err
 	}
 	str := string(b)
-	str = strings.Replace(str, oldVersion, newVersion, -1)
+	str = strings.ReplaceAll(str, oldVersion, newVersion)
 	if !dryRun {
-		err = ioutil.WriteFile(filename, []byte(str), 0644)
+		err = os.WriteFile(filename, []byte(str), 0o600)
 		if err != nil {
 			return err
 		}

@@ -8,11 +8,10 @@ import (
 )
 
 func TestProviderEquals(t *testing.T) {
-
 	expected := Terraform{
 		RequiredProviders: RequiredProviders{
 			Providers: map[string]map[string]string{
-				"google": map[string]string{
+				"google": {
 					"source":  "hashicorp/google",
 					"version": "=3.75.0",
 				},

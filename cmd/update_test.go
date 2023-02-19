@@ -1,7 +1,6 @@
 package tfu
 
 import (
-	"io/ioutil"
 	"os"
 	"testing"
 
@@ -23,7 +22,7 @@ provider "aws" {
 }`
 
 func TestUpdateHCT(t *testing.T) {
-	file, err := ioutil.TempFile("", "prefix")
+	file, err := os.CreateTemp("", "prefix")
 	if err != nil {
 		require.NoError(t, err)
 	}
@@ -37,7 +36,7 @@ func TestUpdateHCT(t *testing.T) {
 	if err != nil {
 		require.NoError(t, err)
 	}
-	b, err := ioutil.ReadFile(file.Name())
+	b, err := os.ReadFile(file.Name())
 	if err != nil {
 		require.NoError(t, err)
 	}

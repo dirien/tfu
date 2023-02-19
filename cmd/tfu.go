@@ -46,7 +46,6 @@ func parseBaseCommand(_ *cobra.Command, _ []string) {
 }
 
 func Execute(version, gitCommit string) error {
-
 	Version = version
 	GitCommit = gitCommit
 

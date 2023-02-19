@@ -19,8 +19,8 @@ type Github struct {
 }
 
 func ParseGithubInfos(source string) *Github {
-	//git@github.com:rackspace-infrastructure-automation/aws-terraform-asg_instance_replacement//?ref=v0.12.0
-	//https://github.com/rackspace-infrastructure-automation/aws-terraform-asg_instance_replacement.git
+	// git@github.com:rackspace-infrastructure-automation/aws-terraform-asg_instance_replacement//?ref=v0.12.0
+	// https://github.com/rackspace-infrastructure-automation/aws-terraform-asg_instance_replacement.git
 	parse, err := giturls.Parse(source)
 	if err != nil {
 		return nil
@@ -28,7 +28,6 @@ func ParseGithubInfos(source string) *Github {
 	var currentVersion string
 	if len(parse.Query()["ref"]) > 0 {
 		currentVersion = parse.Query()["ref"][0]
-
 	} else {
 		// no ref means it is already master
 		return nil
@@ -39,7 +38,7 @@ func ParseGithubInfos(source string) *Github {
 	}
 	owner := strings.Split(parse.Path, "/")[1-diff]
 	repo := strings.Split(parse.Path, "/")[2-diff]
-	repo = strings.Replace(repo, ".git", "", -1)
+	repo = strings.ReplaceAll(repo, ".git", "")
 	return &Github{
 		Owner:   owner,
 		Repo:    repo,
