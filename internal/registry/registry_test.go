@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/dirien/tfu/pkg/hcl"
+	"github.com/dirien/tfu/internal/hcl"
 	"github.com/go-resty/resty/v2"
 	"github.com/jarcoal/httpmock"
 	"github.com/stretchr/testify/require"
