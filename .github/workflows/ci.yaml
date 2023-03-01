@@ -49,7 +49,7 @@ jobs:
       - uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70 # tag=v3
         with:
           file: ./coverage.txt
-      - uses: sigstore/cosign-installer@9becc617647dfa20ae7b1151972e9b3a2c338a2b # tag=v2.8.1
+      - uses: sigstore/cosign-installer@77560e399fb1b0d50a89024c16dd3a908f8d44b5 # v3.0.0
       - uses: anchore/sbom-action/download-syft@07978da4bdb4faa726e52dfc6b1bed63d4b56479 # tag=v0.13.3
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@f82d6c1c344bcacabba2c841718984797f664a6b # tag=v4
