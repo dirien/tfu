@@ -8,7 +8,7 @@ require (
 	github.com/go-resty/resty/v2 v2.10.0
 	github.com/google/go-github/v56 v56.0.0
 	github.com/hashicorp/go-version v1.6.0
-	github.com/hashicorp/hcl/v2 v2.19.0
+	github.com/hashicorp/hcl/v2 v2.19.1
 	github.com/jarcoal/httpmock v1.3.1
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/pkg/errors v0.9.1
