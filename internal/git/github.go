@@ -7,7 +7,7 @@ import (
 
 	giturls "github.com/whilp/git-urls"
 
-	"github.com/google/go-github/v56/github"
+	"github.com/google/go-github/v57/github"
 	"github.com/hashicorp/go-version"
 	"golang.org/x/oauth2"
 )
