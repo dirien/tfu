@@ -1,12 +1,14 @@
 module github.com/dirien/tfu
 
-go 1.19
+go 1.21
+
+toolchain go1.22.0
 
 require (
 	github.com/briandowns/spinner v1.23.0
 	github.com/fatih/color v1.16.0
 	github.com/go-resty/resty/v2 v2.11.0
-	github.com/google/go-github/v59 v59.0.0
+	github.com/google/go-github/v60 v60.0.0
 	github.com/hashicorp/go-version v1.6.0
 	github.com/hashicorp/hcl/v2 v2.20.0
 	github.com/jarcoal/httpmock v1.3.1
