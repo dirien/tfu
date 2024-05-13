@@ -2,7 +2,7 @@ module github.com/dirien/tfu
 
 go 1.21
 
-toolchain go1.22.0
+toolchain go1.22.3
 
 require (
 	github.com/briandowns/spinner v1.23.0
