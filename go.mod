@@ -6,7 +6,7 @@ toolchain go1.22.3
 
 require (
 	github.com/briandowns/spinner v1.23.0
-	github.com/fatih/color v1.16.0
+	github.com/fatih/color v1.17.0
 	github.com/go-resty/resty/v2 v2.13.1
 	github.com/google/go-github/v60 v60.0.0
 	github.com/hashicorp/go-version v1.6.0
