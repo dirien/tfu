@@ -8,7 +8,7 @@ require (
 	github.com/briandowns/spinner v1.23.0
 	github.com/fatih/color v1.17.0
 	github.com/go-resty/resty/v2 v2.13.1
-	github.com/google/go-github/v60 v60.0.0
+	github.com/google/go-github/v62 v62.0.0
 	github.com/hashicorp/go-version v1.6.0
 	github.com/hashicorp/hcl/v2 v2.20.1
 	github.com/jarcoal/httpmock v1.3.1
