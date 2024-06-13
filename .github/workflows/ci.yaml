@@ -23,7 +23,7 @@ jobs:
       - name: Tests
         run: |
           go test  -failfast -race -coverpkg=./... -covermode=atomic -coverprofile=coverage.txt ./... -run . -timeout=5m
-      - uses: codecov/codecov-action@125fc84a9a348dbcf27191600683ec096ec9021c # v4
+      - uses: codecov/codecov-action@e28ff129e5465c2c0dcc6f003fc735cb6ae0c673 # v4
         with:
           file: ./coverage.txt
   release:
@@ -46,7 +46,7 @@ jobs:
       - name: Tests
         run: |
           go test  -failfast -race -coverpkg=./... -covermode=atomic -coverprofile=coverage.txt ./... -run . -timeout=5m
-      - uses: codecov/codecov-action@125fc84a9a348dbcf27191600683ec096ec9021c # v4
+      - uses: codecov/codecov-action@e28ff129e5465c2c0dcc6f003fc735cb6ae0c673 # v4
         with:
           file: ./coverage.txt
       - uses: sigstore/cosign-installer@59acb6260d9c0ba8f4a2f9d9b48431a222b68e20 # v3.5.0
